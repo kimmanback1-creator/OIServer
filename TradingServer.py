@@ -14,7 +14,7 @@ TELEGRAM_CHAT_ID = os.getenv("CHAT_ID")
 
 supabase = create_client(SUPABASE_URL, SUPBASE_KEY)
 app = FastAPI()
-
+#
 OI_FLAT_TH = 3  # ±3% 이내 → 횡보로 판정
 
 def send_telegram(msg):
