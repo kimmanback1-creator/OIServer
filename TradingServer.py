@@ -7,12 +7,12 @@ import numpy as np
 load_dotenv()
 
 SUPABASE_URL     = os.getenv("SUPABASE_URL")
-SUPBASE_KEY      = os.getenv("SUPBASE_KEY")
+SUPABASE_KEY      = os.getenv("SUPABASE_KEY")
 COINGECKO_KEY    = os.getenv("COINGECKO_KEY")
 TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("CHAT_ID")
 
-supabase = create_client(SUPABASE_URL, SUPBASE_KEY)
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 app = FastAPI()
 #
 OI_FLAT_TH = 3  # ±3% 이내 → 횡보로 판정
