@@ -3,6 +3,7 @@ import os, requests, threading, time, datetime
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 import numpy as np
+import schedule
 
 load_dotenv()
 
@@ -125,11 +126,13 @@ def analyze_signal():
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 4H 반복 처리
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 4H 주기 실행
+schedule.every(4).hours.do(lambda: (fetch_OI("ETH"), analyze_signal()))
+
 def scheduler():
     while True:
-        fetch_OI("ETH")
-        analyze_signal()
-        time.sleep(14400)
+        schedule.run_pending()
+        time.sleep(1) 
 
 threading.Thread(target=scheduler, daemon=True).start()
 
