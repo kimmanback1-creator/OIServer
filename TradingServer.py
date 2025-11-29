@@ -148,11 +148,11 @@ async def webhook_receiver(req: Request):
     supabase.table("candle_logs").insert({
         "timestamp": now,
         "symbol": data.get("symbol"),
-        "open":   float(data.get("open", 0)),
-        "close":  float(data.get("close", 0)),
-        "high":   float(data.get("high", 0)),
-        "low":    float(data.get("low", 0)),
-        "volume": float(data.get("volume", 0)),
+        "open":   float(data.get("open")),
+        "close":  float(data.get("close")),
+        "high":   float(data.get("high")),
+        "low":    float(data.get("low")),
+        "volume": float(data.get("volume")),
         "time":   data.get("time")
     }).execute()
 
