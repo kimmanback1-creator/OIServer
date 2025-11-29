@@ -140,6 +140,7 @@ threading.Thread(target=scheduler, daemon=True).start()
 @app.post("/webhook")
 async def webhook_receiver(req: Request):
     data = await req.json()
+    print("▼ Webhook RAW:", data)  
     now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).isoformat()
 
     supabase.table("candle_logs").insert({
