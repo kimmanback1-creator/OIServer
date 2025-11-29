@@ -140,26 +140,34 @@ threading.Thread(target=scheduler, daemon=True).start()
 @app.post("/webhook")
 async def webhook_receiver(req: Request):
     data = await req.json()
-    print("▼ Webhook RAW:", data)  
+    print("🔥 RECEIVED:", data)   # ★ 가장 중요
+
     now = (datetime.datetime.utcnow() + datetime.timedelta(hours=9)).isoformat()
 
+    # candle 저장
     supabase.table("candle_logs").insert({
         "timestamp": now,
         "symbol": data.get("symbol"),
-        "open":   float(data.get("open")),
-        "close":  float(data.get("close")),
-        "high":   float(data.get("high")),
-        "low":    float(data.get("low")),
-        "volume": float(data.get("volume")),
+        "open":   float(data.get("open", 0)),
+        "close":  float(data.get("close", 0)),
+        "high":   float(data.get("high", 0)),
+        "low":    float(data.get("low", 0)),
+        "volume": float(data.get("volume", 0)),
         "time":   data.get("time")
     }).execute()
 
-    if data.get("type"):
+    # diamond 저장
+    t = data.get("type")
+    if t is not None and t != "":
+        print("💎 DIAMOND DETECTED:", t)
         supabase.table("diamond_logs").insert({
             "timestamp": now,
             "symbol": data.get("symbol"),
-            "signal": data.get("type"),
-            "color":  data.get("color")
+            "signal": t,         
+            "color": data.get("color", None),
+            "time": data.get("time") 
         }).execute()
+    else:
+        print("❌ type 값 없음 → diamond 미저장")
 
     return {"status": "ok"}
