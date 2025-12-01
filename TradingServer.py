@@ -52,7 +52,13 @@ def detect_engulf(prev, curr):
         return "Bullish Engulfing" if curr["close"] > curr["open"] else "Bearish Engulfing"
     return None
 
-
+def trim_logs(table, keep=40):
+    rows = supabase.table(table).select("id").order("id", desc=True).execute().data
+    if len(rows) > keep:
+        delete_ids = [r["id"] for r in rows[keep:]]
+        supabase.table(table).delete().in_("id", delete_ids).execute()
+        print(f"🧹 {table} {len(delete_ids)}개 정리 완료 (keep={keep})")
+        
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 🔥 AI 레벨 업그레이드된 분석 로직
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -172,5 +178,8 @@ async def webhook_receiver(req: Request):
         }).execute()
     else:
         print("❌ type 값 없음 → diamond 미저장")
-
+    trim_logs("candle_logs", keep=50)
+    trim_logs("diamond_logs", keep=50)
+    trim_logs("oi_logs",     keep=50)
     return {"status": "ok"}
+    
